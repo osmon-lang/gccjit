@@ -1,0 +1,10 @@
+[package]
+name = "gccjit"
+version = "0.3.0"
+authors = ["Yuri Katsuki <yuri@katsuki.moe>"]
+edition = "2018"
+
+
+[dependencies]
+gccjit-sys = {path = "gccjit-sys"}
+gccjit-derive = {path = "gccjit-derive"}
