@@ -14,5 +14,5 @@ license = "GPL-3.0"
 exclude = ["target", ".github"]
 
 [dependencies]
-osmojit-sys = "0.3.0"
-osmojit-derive = "0.3.0"
+osmojit-sys = "0.4.0"
+osmojit-derive = "0.4.0"
