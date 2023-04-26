@@ -1,11 +1,9 @@
-extern crate gccjit;
-
 use ctx::*;
-use gccjit::*;
+use osmojit::*;
 
 
-use gccjit::function::FunctionType;
-use gccjit::rvalue::ToRValue;
+use osmojit::function::FunctionType;
+use osmojit::rvalue::ToRValue;
 use std::intrinsics::transmute;
 
 fn main() {

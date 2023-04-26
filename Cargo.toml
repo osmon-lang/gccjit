@@ -1,9 +1,17 @@
 [package]
-name = "gccjit"
+name = "osmojit"
 version = "0.3.0"
 authors = ["Yuri Katsuki <yuri@katsuki.moe>"]
-edition = "2018"
-
+edition = "2021"
+homepage = "https://osmon.dev"
+documentation = "https://wiki.osmon.dev"
+repository = "https://github.com/osmon-lang/gccjit"
+description = "GCCJIT exposed API for Osmon programming language"
+keywords = ["programming-language", "interpreter", "compiler","uzbek"]
+readme = "readme.md"
+categories = ["localization"]
+license = "GPL-3.0"
+exclude = ["target", ".github"]
 
 [dependencies]
 gccjit-sys = {path = "gccjit-sys"}
