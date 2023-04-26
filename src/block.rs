@@ -4,8 +4,8 @@ use crate::location::{self, Location};
 use crate::lvalue::{self, ToLValue};
 use crate::object::{self, Object, ToObject};
 use crate::rvalue::{self, ToRValue};
-use gccjit_sys;
-use gccjit_sys::{gcc_jit_block_end_with_switch, gcc_jit_case, gcc_jit_case_as_object};
+use osmojit_sys;
+use osmojit_sys::{gcc_jit_block_end_with_switch, gcc_jit_case, gcc_jit_case_as_object};
 use std::ffi::CString;
 use std::fmt;
 use std::marker::PhantomData;
@@ -83,13 +83,13 @@ impl ToObject for Case {
 /// two blocks (true/false branches), a return, or a void return.
 #[derive(Copy, Clone)]
 pub struct Block {
-    pub(crate) ptr: *mut gccjit_sys::gcc_jit_block,
+    pub(crate) ptr: *mut osmojit_sys::gcc_jit_block,
 }
 
 impl ToObject for Block {
     fn to_object(&self) -> Object {
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_block_as_object(self.ptr);
+            let ptr = osmojit_sys::gcc_jit_block_as_object(self.ptr);
             object::from_ptr(ptr)
         }
     }
@@ -105,7 +105,7 @@ impl fmt::Debug for Block {
 impl Block {
     pub fn get_function(&self) -> Function {
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_block_get_function(self.ptr);
+            let ptr = osmojit_sys::gcc_jit_block_get_function(self.ptr);
             function::from_ptr(ptr)
         }
     }
@@ -119,7 +119,7 @@ impl Block {
             None => ptr::null_mut(),
         };
         unsafe {
-            gccjit_sys::gcc_jit_block_add_eval(self.ptr, loc_ptr, rvalue::get_ptr(&rvalue));
+            osmojit_sys::gcc_jit_block_add_eval(self.ptr, loc_ptr, rvalue::get_ptr(&rvalue));
         }
     }
 
@@ -138,7 +138,7 @@ impl Block {
             None => ptr::null_mut(),
         };
         unsafe {
-            gccjit_sys::gcc_jit_block_add_assignment(
+            osmojit_sys::gcc_jit_block_add_assignment(
                 self.ptr,
                 loc_ptr,
                 lvalue::get_ptr(&lvalue),
@@ -164,7 +164,7 @@ impl Block {
             None => ptr::null_mut(),
         };
         unsafe {
-            gccjit_sys::gcc_jit_block_add_assignment_op(
+            osmojit_sys::gcc_jit_block_add_assignment_op(
                 self.ptr,
                 loc_ptr,
                 lvalue::get_ptr(&lvalue),
@@ -184,7 +184,7 @@ impl Block {
         };
         unsafe {
             let cstr = CString::new(message_ref).unwrap();
-            gccjit_sys::gcc_jit_block_add_comment(self.ptr, loc_ptr, cstr.as_ptr());
+            osmojit_sys::gcc_jit_block_add_comment(self.ptr, loc_ptr, cstr.as_ptr());
         }
     }
 
@@ -203,7 +203,7 @@ impl Block {
             None => ptr::null_mut(),
         };
         unsafe {
-            gccjit_sys::gcc_jit_block_end_with_conditional(
+            osmojit_sys::gcc_jit_block_end_with_conditional(
                 self.ptr,
                 loc_ptr,
                 rvalue::get_ptr(&cond_rvalue),
@@ -220,7 +220,7 @@ impl Block {
             None => ptr::null_mut(),
         };
         unsafe {
-            gccjit_sys::gcc_jit_block_end_with_jump(self.ptr, loc_ptr, target.ptr);
+            osmojit_sys::gcc_jit_block_end_with_jump(self.ptr, loc_ptr, target.ptr);
         }
     }
 
@@ -254,7 +254,7 @@ impl Block {
             None => ptr::null_mut(),
         };
         unsafe {
-            gccjit_sys::gcc_jit_block_end_with_return(
+            osmojit_sys::gcc_jit_block_end_with_return(
                 self.ptr,
                 loc_ptr,
                 rvalue::get_ptr(&ret_rvalue),
@@ -272,11 +272,11 @@ impl Block {
             None => ptr::null_mut(),
         };
         unsafe {
-            gccjit_sys::gcc_jit_block_end_with_void_return(self.ptr, loc_ptr);
+            osmojit_sys::gcc_jit_block_end_with_void_return(self.ptr, loc_ptr);
         }
     }
 }
 
-pub unsafe fn from_ptr(ptr: *mut gccjit_sys::gcc_jit_block) -> Block {
+pub unsafe fn from_ptr(ptr: *mut osmojit_sys::gcc_jit_block) -> Block {
     Block { ptr: ptr }
 }

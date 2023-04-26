@@ -3,7 +3,7 @@ use crate::object;
 use crate::rvalue;
 use crate::ty as types;
 use crate::ty::Type;
-use gccjit_sys;
+use osmojit_sys;
 use object::{Object, ToObject};
 use std::fmt;
 use std::marker::PhantomData;
@@ -24,7 +24,7 @@ use crate::lvalue::LValue;
 /// given to a majority of the gccjit API calls.
 #[derive(Copy, Clone)]
 pub struct RValue {
-    ptr: *mut gccjit_sys::gcc_jit_rvalue,
+    ptr: *mut osmojit_sys::gcc_jit_rvalue,
 }
 
 /// ToRValue is a trait implemented by types that can be converted to, or
@@ -35,7 +35,7 @@ pub trait ToRValue {
 
 impl ToObject for RValue {
     fn to_object(&self) -> Object {
-        unsafe { object::from_ptr(gccjit_sys::gcc_jit_rvalue_as_object(self.ptr)) }
+        unsafe { object::from_ptr(osmojit_sys::gcc_jit_rvalue_as_object(self.ptr)) }
     }
 }
 
@@ -61,9 +61,9 @@ macro_rules! binary_operator_for {
                 unsafe {
                     let rhs_rvalue = rhs.to_rvalue();
                     let obj_ptr = object::get_ptr(&self.to_object());
-                    let ctx_ptr = gccjit_sys::gcc_jit_object_get_context(obj_ptr);
+                    let ctx_ptr = osmojit_sys::gcc_jit_object_get_context(obj_ptr);
                     let ty = rhs.get_type();
-                    let ptr = gccjit_sys::gcc_jit_context_new_binary_op(
+                    let ptr = osmojit_sys::gcc_jit_context_new_binary_op(
                         ctx_ptr,
                         ptr::null_mut(),
                         mem::transmute($op),
@@ -94,7 +94,7 @@ impl RValue {
     /// Gets the type of this RValue.
     pub fn get_type(&self) -> Type {
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_rvalue_get_type(self.ptr);
+            let ptr = osmojit_sys::gcc_jit_rvalue_get_type(self.ptr);
             types::from_ptr(ptr)
         }
     }
@@ -108,7 +108,7 @@ impl RValue {
         };
         unsafe {
             let ptr =
-                gccjit_sys::gcc_jit_rvalue_access_field(self.ptr, loc_ptr, field::get_ptr(&field));
+                osmojit_sys::gcc_jit_rvalue_access_field(self.ptr, loc_ptr, field::get_ptr(&field));
             rvalue::from_ptr(ptr)
         }
     }
@@ -121,7 +121,7 @@ impl RValue {
             None => ptr::null_mut(),
         };
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_rvalue_dereference_field(
+            let ptr = osmojit_sys::gcc_jit_rvalue_dereference_field(
                 self.ptr,
                 loc_ptr,
                 field::get_ptr(&field),
@@ -137,17 +137,17 @@ impl RValue {
             None => ptr::null_mut(),
         };
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_rvalue_dereference(self.ptr, loc_ptr);
+            let ptr = osmojit_sys::gcc_jit_rvalue_dereference(self.ptr, loc_ptr);
 
             lvalue::from_ptr(ptr)
         }
     }
 }
 
-pub unsafe fn from_ptr(ptr: *mut gccjit_sys::gcc_jit_rvalue) -> RValue {
+pub unsafe fn from_ptr(ptr: *mut osmojit_sys::gcc_jit_rvalue) -> RValue {
     RValue { ptr: ptr }
 }
 
-pub unsafe fn get_ptr(rvalue: &RValue) -> *mut gccjit_sys::gcc_jit_rvalue {
+pub unsafe fn get_ptr(rvalue: &RValue) -> *mut osmojit_sys::gcc_jit_rvalue {
     rvalue.ptr
 }

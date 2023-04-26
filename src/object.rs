@@ -1,5 +1,5 @@
 use crate::ctx::Context;
-use gccjit_sys;
+use osmojit_sys;
 use std::ffi::CStr;
 use std::fmt;
 use std::marker::PhantomData;
@@ -10,13 +10,13 @@ use std::str;
 /// used by most objects in this library.
 #[derive(Copy, Clone)]
 pub struct Object {
-    ptr: *mut gccjit_sys::gcc_jit_object,
+    ptr: *mut osmojit_sys::gcc_jit_object,
 }
 
 impl fmt::Debug for Object {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> Result<(), fmt::Error> {
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_object_get_debug_string(self.ptr);
+            let ptr = osmojit_sys::gcc_jit_object_get_debug_string(self.ptr);
             let cstr = CStr::from_ptr(ptr);
             let rust_str = str::from_utf8_unchecked(cstr.to_bytes());
             fmt.write_str(rust_str)
@@ -35,10 +35,10 @@ impl ToObject for Object {
     }
 }
 
-pub unsafe fn from_ptr(ptr: *mut gccjit_sys::gcc_jit_object) -> Object {
+pub unsafe fn from_ptr(ptr: *mut osmojit_sys::gcc_jit_object) -> Object {
     Object { ptr: ptr }
 }
 
-pub unsafe fn get_ptr(object: &Object) -> *mut gccjit_sys::gcc_jit_object {
+pub unsafe fn get_ptr(object: &Object) -> *mut osmojit_sys::gcc_jit_object {
     object.ptr
 }

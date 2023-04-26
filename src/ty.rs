@@ -12,12 +12,12 @@ pub struct Type {
 impl Type {
     /// Given a type T, creates a type to *T, a pointer to T.
     pub fn make_pointer(self) -> Type {
-        unsafe { from_ptr(gccjit_sys::gcc_jit_type_get_pointer(self.ptr)) }
+        unsafe { from_ptr(osmojit_sys::gcc_jit_type_get_pointer(self.ptr)) }
     }
 
     /// Given a type T, creates a type of const T.
     pub fn make_const(self) -> Type {
-        unsafe { from_ptr(gccjit_sys::gcc_jit_type_get_const(self.ptr)) }
+        unsafe { from_ptr(osmojit_sys::gcc_jit_type_get_const(self.ptr)) }
     }
 
     pub fn from_const(ctx: &Context, u: u32) -> Type {
@@ -27,7 +27,7 @@ impl Type {
     /// Given a type T, creates a new type of volatile T, which
     /// has the semantics of C's volatile.
     pub fn make_volatile(self) -> Type {
-        unsafe { from_ptr(gccjit_sys::gcc_jit_type_get_volatile(self.ptr)) }
+        unsafe { from_ptr(osmojit_sys::gcc_jit_type_get_volatile(self.ptr)) }
     }
 }
 
@@ -56,7 +56,7 @@ use crate::object::{Object, ToObject};
 impl ToObject for Type {
     fn to_object(&self) -> Object {
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_type_as_object(self.ptr);
+            let ptr = osmojit_sys::gcc_jit_type_as_object(self.ptr);
             object::from_ptr(ptr)
         }
     }
@@ -103,10 +103,10 @@ impl<T: Typeable> Typeable for *const T {
     }
 }
 
-pub unsafe fn from_ptr(ptr: *mut gccjit_sys::gcc_jit_type) -> Type {
+pub unsafe fn from_ptr(ptr: *mut osmojit_sys::gcc_jit_type) -> Type {
     Type { ptr: ptr }
 }
 
-pub unsafe fn get_ptr(ty: &Type) -> *mut gccjit_sys::gcc_jit_type {
+pub unsafe fn get_ptr(ty: &Type) -> *mut osmojit_sys::gcc_jit_type {
     ty.ptr
 }

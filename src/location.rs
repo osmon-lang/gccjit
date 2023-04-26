@@ -1,6 +1,6 @@
 use crate::ctx::Context;
 use crate::object;
-use gccjit_sys;
+use osmojit_sys;
 use object::{Object, ToObject};
 use std::fmt;
 use std::marker::PhantomData;
@@ -8,12 +8,12 @@ use std::marker::PhantomData;
 /// A Location represents a location used when debugging jitted code.
 #[derive(Copy, Clone)]
 pub struct Location {
-    ptr: *mut gccjit_sys::gcc_jit_location,
+    ptr: *mut osmojit_sys::gcc_jit_location,
 }
 
 impl ToObject for Location {
     fn to_object(&self) -> Object {
-        unsafe { object::from_ptr(gccjit_sys::gcc_jit_location_as_object(self.ptr)) }
+        unsafe { object::from_ptr(osmojit_sys::gcc_jit_location_as_object(self.ptr)) }
     }
 }
 
@@ -24,10 +24,10 @@ impl fmt::Debug for Location {
     }
 }
 
-pub unsafe fn from_ptr(ptr: *mut gccjit_sys::gcc_jit_location) -> Location {
+pub unsafe fn from_ptr(ptr: *mut osmojit_sys::gcc_jit_location) -> Location {
     Location { ptr: ptr }
 }
 
-pub unsafe fn get_ptr(loc: &Location) -> *mut gccjit_sys::gcc_jit_location {
+pub unsafe fn get_ptr(loc: &Location) -> *mut osmojit_sys::gcc_jit_location {
     loc.ptr
 }

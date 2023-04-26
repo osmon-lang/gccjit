@@ -7,7 +7,7 @@ use crate::object;
 use crate::object::{Object, ToObject};
 use crate::rvalue;
 use crate::rvalue::{RValue, ToRValue};
-use gccjit_sys;
+use osmojit_sys;
 use std::fmt;
 use std::marker::PhantomData;
 use std::ptr;
@@ -18,7 +18,7 @@ use std::ptr;
 /// It is also possible to get the dress of an LValue.
 #[derive(Copy, Clone)]
 pub struct LValue {
-    ptr: *mut gccjit_sys::gcc_jit_lvalue,
+    ptr: *mut osmojit_sys::gcc_jit_lvalue,
 }
 
 /// ToLValue is a trait implemented by types that can be converted (or treated
@@ -29,7 +29,7 @@ pub trait ToLValue {
 
 impl ToObject for LValue {
     fn to_object(&self) -> Object {
-        unsafe { object::from_ptr(gccjit_sys::gcc_jit_lvalue_as_object(self.ptr)) }
+        unsafe { object::from_ptr(osmojit_sys::gcc_jit_lvalue_as_object(self.ptr)) }
     }
 }
 
@@ -49,7 +49,7 @@ impl ToLValue for LValue {
 impl ToRValue for LValue {
     fn to_rvalue(&self) -> RValue {
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_lvalue_as_rvalue(self.ptr);
+            let ptr = osmojit_sys::gcc_jit_lvalue_as_rvalue(self.ptr);
             rvalue::from_ptr(ptr)
         }
     }
@@ -65,7 +65,7 @@ impl LValue {
         };
         unsafe {
             let ptr =
-                gccjit_sys::gcc_jit_lvalue_access_field(self.ptr, loc_ptr, field::get_ptr(&field));
+                osmojit_sys::gcc_jit_lvalue_access_field(self.ptr, loc_ptr, field::get_ptr(&field));
             from_ptr(ptr)
         }
     }
@@ -77,16 +77,16 @@ impl LValue {
             None => ptr::null_mut(),
         };
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_lvalue_get_address(self.ptr, loc_ptr);
+            let ptr = osmojit_sys::gcc_jit_lvalue_get_address(self.ptr, loc_ptr);
             rvalue::from_ptr(ptr)
         }
     }
 }
 
-pub unsafe fn from_ptr(ptr: *mut gccjit_sys::gcc_jit_lvalue) -> LValue {
+pub unsafe fn from_ptr(ptr: *mut osmojit_sys::gcc_jit_lvalue) -> LValue {
     LValue { ptr: ptr }
 }
 
-pub unsafe fn get_ptr(lvalue: &LValue) -> *mut gccjit_sys::gcc_jit_lvalue {
+pub unsafe fn get_ptr(lvalue: &LValue) -> *mut osmojit_sys::gcc_jit_lvalue {
     lvalue.ptr
 }

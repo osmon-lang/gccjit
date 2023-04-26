@@ -2,7 +2,7 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 
-pub use gccjit_sys as sys;
+pub use osmojit_sys as sys;
 pub mod block;
 pub mod ctx;
 pub mod field;

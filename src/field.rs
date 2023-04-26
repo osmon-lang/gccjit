@@ -9,12 +9,12 @@ use crate::object::{Object, ToObject};
 /// can be combined to create either a struct or a union.
 #[derive(Copy, Clone)]
 pub struct Field {
-    ptr: *mut gccjit_sys::gcc_jit_field,
+    ptr: *mut osmojit_sys::gcc_jit_field,
 }
 
 impl ToObject for Field {
     fn to_object(&self) -> Object {
-        unsafe { object::from_ptr(gccjit_sys::gcc_jit_field_as_object(self.ptr)) }
+        unsafe { object::from_ptr(osmojit_sys::gcc_jit_field_as_object(self.ptr)) }
     }
 }
 
@@ -25,10 +25,10 @@ impl fmt::Debug for Field {
     }
 }
 
-pub unsafe fn from_ptr(ptr: *mut gccjit_sys::gcc_jit_field) -> Field {
+pub unsafe fn from_ptr(ptr: *mut osmojit_sys::gcc_jit_field) -> Field {
     Field { ptr: ptr }
 }
 
-pub unsafe fn get_ptr(f: &Field) -> *mut gccjit_sys::gcc_jit_field {
+pub unsafe fn get_ptr(f: &Field) -> *mut osmojit_sys::gcc_jit_field {
     f.ptr
 }

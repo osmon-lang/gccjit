@@ -1,6 +1,6 @@
 [package]
 name = "osmojit-sys"
-version = "0.3.0"
+version = "0.4.0"
 authors = ["Yuri Katsuki <yuri@katsuki.moe>"]
 edition = "2018"
 homepage = "https://osmon.dev"

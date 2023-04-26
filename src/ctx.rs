@@ -14,7 +14,7 @@ use crate::parameter::{self, Parameter};
 use crate::rvalue::{self, RValue, ToRValue};
 use crate::structs::{self, Struct};
 use crate::ty as types;
-use gccjit_sys::*;
+use osmojit_sys::*;
 
 use crate::sys::*;
 
@@ -103,7 +103,7 @@ impl Context {
     pub fn compile(&self) -> CompileResult {
         unsafe {
             CompileResult {
-                ptr: gccjit_sys::gcc_jit_context_compile(self.ptr),
+                ptr: osmojit_sys::gcc_jit_context_compile(self.ptr),
             }
         }
     }
@@ -114,7 +114,7 @@ impl Context {
         unsafe {
             let file_ref = file.as_ref();
             let cstr = CString::new(file_ref).unwrap();
-            gccjit_sys::gcc_jit_context_compile_to_file(
+            osmojit_sys::gcc_jit_context_compile_to_file(
                 self.ptr,
                 mem::transmute(kind),
                 cstr.as_ptr(),
@@ -158,7 +158,7 @@ impl Context {
     pub fn new_child_context(&self) -> Context {
         unsafe {
             Context {
-                ptr: gccjit_sys::gcc_jit_context_new_child_context(self.ptr),
+                ptr: osmojit_sys::gcc_jit_context_new_child_context(self.ptr),
             }
         }
     }
@@ -189,7 +189,7 @@ impl Context {
         unsafe {
             let filename_ref = filename.as_ref();
             let cstr = CString::new(filename_ref).unwrap();
-            let ptr = gccjit_sys::gcc_jit_context_new_location(self.ptr, cstr.as_ptr(), line, col);
+            let ptr = osmojit_sys::gcc_jit_context_new_location(self.ptr, cstr.as_ptr(), line, col);
             location::from_ptr(ptr)
         }
     }
@@ -226,7 +226,7 @@ impl Context {
             None => ptr::null_mut(),
         };
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_context_new_array_type(
+            let ptr = osmojit_sys::gcc_jit_context_new_array_type(
                 self.ptr,
                 loc_ptr,
                 types::get_ptr(&ty),
@@ -257,7 +257,7 @@ impl Context {
             .collect();
         unsafe {
             let cname = CString::new(name_ref).unwrap();
-            let ptr = gccjit_sys::gcc_jit_context_new_struct_type(
+            let ptr = osmojit_sys::gcc_jit_context_new_struct_type(
                 self.ptr,
                 loc_ptr,
                 cname.as_ptr(),
@@ -279,7 +279,7 @@ impl Context {
         unsafe {
             let cstr = CString::new(name_ref).unwrap();
             let ptr =
-                gccjit_sys::gcc_jit_context_new_opaque_struct(self.ptr, loc_ptr, cstr.as_ptr());
+                osmojit_sys::gcc_jit_context_new_opaque_struct(self.ptr, loc_ptr, cstr.as_ptr());
             structs::from_ptr(ptr)
         }
     }
@@ -303,7 +303,7 @@ impl Context {
             .collect();
         unsafe {
             let cname = CString::new(name_ref).unwrap();
-            let ptr = gccjit_sys::gcc_jit_context_new_union_type(
+            let ptr = osmojit_sys::gcc_jit_context_new_union_type(
                 self.ptr,
                 loc_ptr,
                 cname.as_ptr(),
@@ -368,7 +368,7 @@ impl Context {
             .map(|x| unsafe { types::get_ptr(&x) })
             .collect();
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_context_new_function_ptr_type(
+            let ptr = osmojit_sys::gcc_jit_context_new_function_ptr_type(
                 self.ptr,
                 loc_ptr,
                 types::get_ptr(&return_type),
@@ -403,7 +403,7 @@ impl Context {
             .collect();
         unsafe {
             let cstr = CString::new(name_ref).unwrap();
-            let ptr = gccjit_sys::gcc_jit_context_new_function(
+            let ptr = osmojit_sys::gcc_jit_context_new_function(
                 self.ptr,
                 loc_ptr,
                 mem::transmute(kind),
@@ -433,7 +433,7 @@ impl Context {
             None => ptr::null_mut(),
         };
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_context_new_binary_op(
+            let ptr = osmojit_sys::gcc_jit_context_new_binary_op(
                 self.ptr,
                 loc_ptr,
                 mem::transmute(op),
@@ -459,7 +459,7 @@ impl Context {
             None => ptr::null_mut(),
         };
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_context_new_unary_op(
+            let ptr = osmojit_sys::gcc_jit_context_new_unary_op(
                 self.ptr,
                 loc_ptr,
                 mem::transmute(op),
@@ -484,7 +484,7 @@ impl Context {
             None => ptr::null_mut(),
         };
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_context_new_comparison(
+            let ptr = osmojit_sys::gcc_jit_context_new_comparison(
                 self.ptr,
                 loc_ptr,
                 mem::transmute(op),
@@ -513,7 +513,7 @@ impl Context {
             .map(|x| unsafe { rvalue::get_ptr(&x) })
             .collect();
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_context_new_call(
+            let ptr = osmojit_sys::gcc_jit_context_new_call(
                 self.ptr,
                 loc_ptr,
                 function::get_ptr(&func),
@@ -536,7 +536,7 @@ impl Context {
         }
         let elems_ptr = elems.as_mut_ptr();
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_context_new_rvalue_from_vector(
+            let ptr = osmojit_sys::gcc_jit_context_new_rvalue_from_vector(
                 self.ptr,
                 location::get_ptr(&loc.unwrap_or(location::from_ptr(ptr::null_mut()))),
                 types::get_ptr(&ty),
@@ -569,7 +569,7 @@ impl Context {
             .map(|x| unsafe { rvalue::get_ptr(&x) })
             .collect();
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_context_new_call_through_ptr(
+            let ptr = osmojit_sys::gcc_jit_context_new_call_through_ptr(
                 self.ptr,
                 loc_ptr,
                 rvalue::get_ptr(&fun_ptr_rvalue),
@@ -593,7 +593,7 @@ impl Context {
             None => ptr::null_mut(),
         };
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_context_new_cast(
+            let ptr = osmojit_sys::gcc_jit_context_new_cast(
                 self.ptr,
                 loc_ptr,
                 rvalue::get_ptr(&rvalue),
@@ -618,7 +618,7 @@ impl Context {
             None => ptr::null_mut(),
         };
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_context_new_array_access(
+            let ptr = osmojit_sys::gcc_jit_context_new_array_access(
                 self.ptr,
                 loc_ptr,
                 rvalue::get_ptr(&array_rvalue),
@@ -631,7 +631,7 @@ impl Context {
     /// Creates a new RValue from a given long value.
     pub fn new_rvalue_from_long(&self, ty: types::Type, value: i64) -> RValue {
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_context_new_rvalue_from_long(
+            let ptr = osmojit_sys::gcc_jit_context_new_rvalue_from_long(
                 self.ptr,
                 types::get_ptr(&ty),
                 value,
@@ -643,7 +643,7 @@ impl Context {
     /// Creates a new RValue from a given int value.
     pub fn new_rvalue_from_int(&self, ty: types::Type, value: i32) -> RValue {
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_context_new_rvalue_from_int(
+            let ptr = osmojit_sys::gcc_jit_context_new_rvalue_from_int(
                 self.ptr,
                 types::get_ptr(&ty),
                 value,
@@ -655,7 +655,7 @@ impl Context {
     /// Creates a new RValue from a given double value.
     pub fn new_rvalue_from_double(&self, ty: types::Type, value: f64) -> RValue {
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_context_new_rvalue_from_double(
+            let ptr = osmojit_sys::gcc_jit_context_new_rvalue_from_double(
                 self.ptr,
                 types::get_ptr(&ty),
                 value,
@@ -667,7 +667,7 @@ impl Context {
     /// Creates a zero element for a given type.
     pub fn new_rvalue_zero(&self, ty: types::Type) -> RValue {
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_context_zero(self.ptr, types::get_ptr(&ty));
+            let ptr = osmojit_sys::gcc_jit_context_zero(self.ptr, types::get_ptr(&ty));
             rvalue::from_ptr(ptr)
         }
     }
@@ -675,7 +675,7 @@ impl Context {
     /// Creates a one element for a given type.
     pub fn new_rvalue_one(&self, ty: types::Type) -> RValue {
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_context_one(self.ptr, types::get_ptr(&ty));
+            let ptr = osmojit_sys::gcc_jit_context_one(self.ptr, types::get_ptr(&ty));
             rvalue::from_ptr(ptr)
         }
     }
@@ -685,7 +685,7 @@ impl Context {
     /// than that of the jitted program.
     pub fn new_rvalue_from_ptr(&self, ty: types::Type, value: *mut ()) -> RValue {
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_context_new_rvalue_from_ptr(
+            let ptr = osmojit_sys::gcc_jit_context_new_rvalue_from_ptr(
                 self.ptr,
                 types::get_ptr(&ty),
                 mem::transmute(value),
@@ -697,7 +697,7 @@ impl Context {
     /// Creates a null RValue.
     pub fn new_null(&self, ty: types::Type) -> RValue {
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_context_null(self.ptr, types::get_ptr(&ty));
+            let ptr = osmojit_sys::gcc_jit_context_null(self.ptr, types::get_ptr(&ty));
             rvalue::from_ptr(ptr)
         }
     }
@@ -706,7 +706,7 @@ impl Context {
     pub fn new_string_literal<S: AsRef<str>>(&self, value: S) -> RValue {
         unsafe {
             let cstr = CString::new(value.as_ref()).unwrap();
-            let ptr = gccjit_sys::gcc_jit_context_new_string_literal(self.ptr, cstr.as_ptr());
+            let ptr = osmojit_sys::gcc_jit_context_new_string_literal(self.ptr, cstr.as_ptr());
             rvalue::from_ptr(ptr)
         }
     }
@@ -718,7 +718,7 @@ impl Context {
         unsafe {
             let path_ref = path.as_ref();
             let cstr = CString::new(path_ref).unwrap();
-            gccjit_sys::gcc_jit_context_dump_reproducer_to_file(self.ptr, cstr.as_ptr());
+            osmojit_sys::gcc_jit_context_dump_reproducer_to_file(self.ptr, cstr.as_ptr());
         }
     }
 
@@ -736,7 +736,7 @@ impl Context {
         };
         unsafe {
             let cstr = CString::new(name_ref).unwrap();
-            let ptr = gccjit_sys::gcc_jit_context_new_param(
+            let ptr = osmojit_sys::gcc_jit_context_new_param(
                 self.ptr,
                 loc_ptr,
                 types::get_ptr(&ty),
@@ -753,7 +753,7 @@ impl Context {
         let name_ref = name.as_ref();
         unsafe {
             let cstr = CString::new(name_ref).unwrap();
-            let ptr = gccjit_sys::gcc_jit_context_get_builtin_function(self.ptr, cstr.as_ptr());
+            let ptr = osmojit_sys::gcc_jit_context_get_builtin_function(self.ptr, cstr.as_ptr());
             function::from_ptr(ptr)
         }
     }
@@ -764,7 +764,7 @@ pub fn context_get_ptr(ctx: &Context) -> *mut gcc_jit_context {
 }
 
 pub struct CompileResult {
-    ptr: *mut gccjit_sys::gcc_jit_result,
+    ptr: *mut osmojit_sys::gcc_jit_result,
 }
 
 impl CompileResult {
@@ -780,7 +780,7 @@ impl CompileResult {
     pub fn get_function<S: AsRef<str>>(&self, name: S) -> *mut () {
         let c_str = CString::new(name.as_ref()).unwrap();
         unsafe {
-            let func = gccjit_sys::gcc_jit_result_get_code(self.ptr, c_str.as_ptr());
+            let func = osmojit_sys::gcc_jit_result_get_code(self.ptr, c_str.as_ptr());
             mem::transmute(func)
         }
     }
@@ -794,7 +794,7 @@ impl CompileResult {
     pub fn get_global<S: AsRef<str>>(&self, name: S) -> *mut () {
         let c_str = CString::new(name.as_ref()).unwrap();
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_result_get_global(self.ptr, c_str.as_ptr());
+            let ptr = osmojit_sys::gcc_jit_result_get_global(self.ptr, c_str.as_ptr());
             mem::transmute(ptr)
         }
     }
@@ -803,7 +803,7 @@ impl CompileResult {
 impl Drop for CompileResult {
     fn drop(&mut self) {
         unsafe {
-            gccjit_sys::gcc_jit_result_release(self.ptr);
+            osmojit_sys::gcc_jit_result_release(self.ptr);
         }
     }
 }

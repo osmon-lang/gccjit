@@ -11,7 +11,7 @@ use crate::parameter;
 use crate::parameter::Parameter;
 use crate::ty as types;
 use crate::ty::Type;
-use gccjit_sys;
+use osmojit_sys;
 use std::ffi::CString;
 use std::fmt;
 use std::marker::PhantomData;
@@ -45,13 +45,13 @@ pub enum FunctionType {
 /// at the function level.
 #[derive(Copy, Clone)]
 pub struct Function {
-    ptr: *mut gccjit_sys::gcc_jit_function,
+    ptr: *mut osmojit_sys::gcc_jit_function,
 }
 
 impl ToObject for Function {
     fn to_object(&self) -> Object {
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_function_as_object(self.ptr);
+            let ptr = osmojit_sys::gcc_jit_function_as_object(self.ptr);
             object::from_ptr(ptr)
         }
     }
@@ -67,14 +67,14 @@ impl fmt::Debug for Function {
 impl Function {
     pub fn get_param(&self, idx: i32) -> Parameter {
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_function_get_param(self.ptr, idx);
+            let ptr = osmojit_sys::gcc_jit_function_get_param(self.ptr, idx);
             parameter::from_ptr(ptr)
         }
     }
 
     pub fn get_address(&self, loc: Option<Location>) -> crate::rvalue::RValue {
         unsafe {
-            crate::rvalue::from_ptr(gccjit_sys::gcc_jit_function_get_address(
+            crate::rvalue::from_ptr(osmojit_sys::gcc_jit_function_get_address(
                 self.ptr,
                 location::get_ptr(&loc.unwrap_or(location::from_ptr(ptr::null_mut()))),
             ))
@@ -84,14 +84,14 @@ impl Function {
     pub fn dump_to_dot<S: AsRef<str>>(&self, path: S) {
         unsafe {
             let cstr = CString::new(path.as_ref()).unwrap();
-            gccjit_sys::gcc_jit_function_dump_to_dot(self.ptr, cstr.as_ptr());
+            osmojit_sys::gcc_jit_function_dump_to_dot(self.ptr, cstr.as_ptr());
         }
     }
 
     pub fn new_block<S: AsRef<str>>(&self, name: S) -> Block {
         unsafe {
             let cstr = CString::new(name.as_ref()).unwrap();
-            let ptr = gccjit_sys::gcc_jit_function_new_block(self.ptr, cstr.as_ptr());
+            let ptr = osmojit_sys::gcc_jit_function_new_block(self.ptr, cstr.as_ptr());
             block::from_ptr(ptr)
         }
     }
@@ -103,7 +103,7 @@ impl Function {
                 None => ptr::null_mut(),
             };
             let cstr = CString::new(name.as_ref()).unwrap();
-            let ptr = gccjit_sys::gcc_jit_function_new_local(
+            let ptr = osmojit_sys::gcc_jit_function_new_local(
                 self.ptr,
                 loc_ptr,
                 types::get_ptr(&ty),
@@ -114,10 +114,10 @@ impl Function {
     }
 }
 
-pub unsafe fn from_ptr(ptr: *mut gccjit_sys::gcc_jit_function) -> Function {
+pub unsafe fn from_ptr(ptr: *mut osmojit_sys::gcc_jit_function) -> Function {
     Function { ptr: ptr }
 }
 
-pub unsafe fn get_ptr(loc: &Function) -> *mut gccjit_sys::gcc_jit_function {
+pub unsafe fn get_ptr(loc: &Function) -> *mut osmojit_sys::gcc_jit_function {
     loc.ptr
 }

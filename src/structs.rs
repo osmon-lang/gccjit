@@ -1,4 +1,4 @@
-use gccjit_sys;
+use osmojit_sys;
 
 use std::fmt;
 use std::marker::PhantomData;
@@ -17,13 +17,13 @@ use crate::ty::Type;
 /// Struct can represent either a struct, an union, or an opaque named type.
 #[derive(Copy, Clone)]
 pub struct Struct {
-    ptr: *mut gccjit_sys::gcc_jit_struct,
+    ptr: *mut osmojit_sys::gcc_jit_struct,
 }
 
 impl Struct {
     pub fn as_type(&self) -> Type {
         unsafe {
-            let ptr = gccjit_sys::gcc_jit_struct_as_type(self.ptr);
+            let ptr = osmojit_sys::gcc_jit_struct_as_type(self.ptr);
             types::from_ptr(ptr)
         }
     }
@@ -39,7 +39,7 @@ impl Struct {
             .map(|x| unsafe { field::get_ptr(&x) })
             .collect();
         unsafe {
-            gccjit_sys::gcc_jit_struct_set_fields(
+            osmojit_sys::gcc_jit_struct_set_fields(
                 self.ptr,
                 loc_ptr,
                 num_fields,
@@ -63,6 +63,6 @@ impl fmt::Debug for Struct {
     }
 }
 
-pub unsafe fn from_ptr(ptr: *mut gccjit_sys::gcc_jit_struct) -> Struct {
+pub unsafe fn from_ptr(ptr: *mut osmojit_sys::gcc_jit_struct) -> Struct {
     Struct { ptr: ptr }
 }
