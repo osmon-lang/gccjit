@@ -14,5 +14,5 @@ license = "GPL-3.0"
 exclude = ["target", ".github"]
 
 [dependencies]
-gccjit-sys = {path = "gccjit-sys"}
-gccjit-derive = {path = "gccjit-derive"}
+osmojit-sys = {path = "gccjit-sys"}
+osmojit-derive = {path = "gccjit-derive"}
