@@ -1,8 +1,6 @@
-
 use crate::ctx::*;
 use crate::sys::*;
 use std::fmt;
-
 
 #[derive(Copy, Clone)]
 pub struct Type {
@@ -96,17 +94,20 @@ impl<T: Typeable> Typeable for *mut T {
 impl<T: Typeable> Typeable for *const T {
     fn get_type(ctx: &Context) -> Type {
         unsafe {
-           
             let ptr = gcc_jit_type_get_pointer(get_ptr(&T::get_type(ctx)));
             from_ptr(ptr).make_const()
         }
     }
 }
 
+/// # Safety
+/// This function is unsafe because it dereferences a raw pointer.
 pub unsafe fn from_ptr(ptr: *mut osmojit_sys::gcc_jit_type) -> Type {
-    Type { ptr: ptr }
+    Type { ptr }
 }
 
+/// # Safety
+/// This function is unsafe because it dereferences a raw pointer.
 pub unsafe fn get_ptr(ty: &Type) -> *mut osmojit_sys::gcc_jit_type {
     ty.ptr
 }

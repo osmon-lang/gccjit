@@ -1,10 +1,8 @@
 use osmojit_sys;
 
 use std::fmt;
-use std::marker::PhantomData;
 use std::ptr;
 
-use crate::ctx::Context;
 use crate::field;
 use crate::field::Field;
 use crate::location;
@@ -36,7 +34,7 @@ impl Struct {
         let num_fields = fields.len() as i32;
         let mut fields_ptrs: Vec<_> = fields
             .iter()
-            .map(|x| unsafe { field::get_ptr(&x) })
+            .map(|x| unsafe { field::get_ptr(x) })
             .collect();
         unsafe {
             osmojit_sys::gcc_jit_struct_set_fields(
@@ -63,6 +61,8 @@ impl fmt::Debug for Struct {
     }
 }
 
+/// # Safety
+/// This function is unsafe because it dereferences a raw pointer.
 pub unsafe fn from_ptr(ptr: *mut osmojit_sys::gcc_jit_struct) -> Struct {
-    Struct { ptr: ptr }
+    Struct { ptr }
 }

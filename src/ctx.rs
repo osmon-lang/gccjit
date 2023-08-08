@@ -1,6 +1,5 @@
 use std::default::Default;
 use std::ffi::CString;
-use std::marker::PhantomData;
 use std::mem;
 use std::ops::Drop;
 use std::ptr;
@@ -15,8 +14,6 @@ use crate::rvalue::{self, RValue, ToRValue};
 use crate::structs::{self, Struct};
 use crate::ty as types;
 use osmojit_sys::*;
-
-use crate::sys::*;
 
 #[repr(C)]
 pub enum GlobalKind {
@@ -253,7 +250,7 @@ impl Context {
         let num_fields = fields.len() as i32;
         let mut fields_ptrs: Vec<_> = fields
             .iter()
-            .map(|x| unsafe { field::get_ptr(&x) })
+            .map(|x| unsafe { field::get_ptr(x) })
             .collect();
         unsafe {
             let cname = CString::new(name_ref).unwrap();
@@ -299,7 +296,7 @@ impl Context {
         let num_fields = fields.len() as i32;
         let mut fields_ptrs: Vec<_> = fields
             .iter()
-            .map(|x| unsafe { field::get_ptr(&x) })
+            .map(|x| unsafe { field::get_ptr(x) })
             .collect();
         unsafe {
             let cname = CString::new(name_ref).unwrap();
@@ -365,7 +362,7 @@ impl Context {
         let num_types = param_types.len() as i32;
         let mut types_ptrs: Vec<_> = param_types
             .iter()
-            .map(|x| unsafe { types::get_ptr(&x) })
+            .map(|x| unsafe { types::get_ptr(x) })
             .collect();
         unsafe {
             let ptr = osmojit_sys::gcc_jit_context_new_function_ptr_type(
@@ -399,7 +396,7 @@ impl Context {
         let num_params = params.len() as i32;
         let mut params_ptrs: Vec<_> = params
             .iter()
-            .map(|x| unsafe { parameter::get_ptr(&x) })
+            .map(|x| unsafe { parameter::get_ptr(x) })
             .collect();
         unsafe {
             let cstr = CString::new(name_ref).unwrap();
@@ -510,7 +507,7 @@ impl Context {
         let num_params = args.len() as i32;
         let mut params_ptrs: Vec<_> = args
             .iter()
-            .map(|x| unsafe { rvalue::get_ptr(&x) })
+            .map(|x| unsafe { rvalue::get_ptr(x) })
             .collect();
         unsafe {
             let ptr = osmojit_sys::gcc_jit_context_new_call(
@@ -683,15 +680,15 @@ impl Context {
     /// Creates an RValue for a raw pointer. This function
     /// requires that the lifetime of the pointer be greater
     /// than that of the jitted program.
-    pub fn new_rvalue_from_ptr(&self, ty: types::Type, value: *mut ()) -> RValue {
-        unsafe {
-            let ptr = osmojit_sys::gcc_jit_context_new_rvalue_from_ptr(
-                self.ptr,
-                types::get_ptr(&ty),
-                mem::transmute(value),
-            );
-            rvalue::from_ptr(ptr)
-        }
+    /// # Safety
+    /// This function is unsafe because it dereferences a raw pointer.
+    pub unsafe fn new_rvalue_from_ptr(&self, ty: types::Type, value: *mut ()) -> RValue {
+        let ptr = osmojit_sys::gcc_jit_context_new_rvalue_from_ptr(
+            self.ptr,
+            types::get_ptr(&ty),
+            mem::transmute(value),
+        );
+        rvalue::from_ptr(ptr)
     }
 
     /// Creates a null RValue.

@@ -1,12 +1,9 @@
-use crate::ctx::Context;
 use crate::object;
-use crate::rvalue;
 use crate::ty as types;
 use crate::ty::Type;
-use osmojit_sys;
 use object::{Object, ToObject};
+use osmojit_sys;
 use std::fmt;
-use std::marker::PhantomData;
 use std::mem;
 use std::ops::{Add, BitAnd, BitOr, BitXor, Div, Mul, Rem, Shl, Shr, Sub};
 use std::ptr;
@@ -109,7 +106,7 @@ impl RValue {
         unsafe {
             let ptr =
                 osmojit_sys::gcc_jit_rvalue_access_field(self.ptr, loc_ptr, field::get_ptr(&field));
-            rvalue::from_ptr(ptr)
+            from_ptr(ptr)
         }
     }
 
@@ -144,10 +141,14 @@ impl RValue {
     }
 }
 
+/// # Safety
+/// This function is unsafe because it dereferences a raw pointer.
 pub unsafe fn from_ptr(ptr: *mut osmojit_sys::gcc_jit_rvalue) -> RValue {
-    RValue { ptr: ptr }
+    RValue { ptr }
 }
 
+/// # Safety
+/// This function is unsafe because it dereferences a raw pointer.
 pub unsafe fn get_ptr(rvalue: &RValue) -> *mut osmojit_sys::gcc_jit_rvalue {
     rvalue.ptr
 }

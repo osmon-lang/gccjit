@@ -1,4 +1,3 @@
-use crate::ctx::Context;
 use crate::function::{self, Function};
 use crate::location::{self, Location};
 use crate::lvalue::{self, ToLValue};
@@ -8,7 +7,6 @@ use osmojit_sys;
 use osmojit_sys::{gcc_jit_block_end_with_switch, gcc_jit_case, gcc_jit_case_as_object};
 use std::ffi::CString;
 use std::fmt;
-use std::marker::PhantomData;
 use std::mem;
 use std::ptr;
 
@@ -277,6 +275,8 @@ impl Block {
     }
 }
 
+/// # Safety
+/// The pointer must be valid.
 pub unsafe fn from_ptr(ptr: *mut osmojit_sys::gcc_jit_block) -> Block {
-    Block { ptr: ptr }
+    Block { ptr }
 }

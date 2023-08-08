@@ -1,7 +1,6 @@
 use ctx::*;
 use osmojit::*;
 
-
 use osmojit::function::FunctionType;
 use osmojit::rvalue::ToRValue;
 use std::intrinsics::transmute;

@@ -1,10 +1,10 @@
 [package]
 name = "osmojit-derive"
-version = "0.4.0"
-authors = ["Yuri Katsuki <yuri@katsuki.moe>"]
-edition = "2018"
-homepage = "https://osmon.dev"
-documentation = "https://wiki.osmon.dev"
+version = "0.4.1"
+authors = ["Sokhibjon Orzikulov <sakhib@orzklv.uz>"]
+edition = "2021"
+homepage = "https://osmon-lang.uz"
+documentation = "https://wiki.osmon-lang.uz"
 repository = "https://github.com/osmon-lang/gccjit"
 description = "GCCJIT exposed API for Osmon programming language"
 keywords = ["programming-language", "interpreter", "compiler","uzbek"]
@@ -18,7 +18,7 @@ name = "osmojit_derive"
 proc-macro = true
 
 [dependencies]
-syn = {version = "0.15",features = ["derive"]}
+syn = { version = "0.15", features = ["derive"] }
 proc-macro2 = "0.4"
 quote = "0.6"
 synstructure = "0.10"

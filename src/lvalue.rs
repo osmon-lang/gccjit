@@ -1,4 +1,3 @@
-use crate::ctx::Context;
 use crate::field;
 use crate::field::Field;
 use crate::location;
@@ -9,7 +8,6 @@ use crate::rvalue;
 use crate::rvalue::{RValue, ToRValue};
 use osmojit_sys;
 use std::fmt;
-use std::marker::PhantomData;
 use std::ptr;
 
 /// An LValue in gccjit represents a value that has a concrete
@@ -83,10 +81,14 @@ impl LValue {
     }
 }
 
+/// # Safety
+/// This function is unsafe because it is not guaranteed that the pointer
 pub unsafe fn from_ptr(ptr: *mut osmojit_sys::gcc_jit_lvalue) -> LValue {
-    LValue { ptr: ptr }
+    LValue { ptr }
 }
 
+/// # Safety
+/// This function is unsafe because it is not guaranteed that the pointer
 pub unsafe fn get_ptr(lvalue: &LValue) -> *mut osmojit_sys::gcc_jit_lvalue {
     lvalue.ptr
 }

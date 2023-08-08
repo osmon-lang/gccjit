@@ -1,10 +1,10 @@
 [package]
 name = "osmojit"
-version = "0.4.0"
-authors = ["Yuri Katsuki <yuri@katsuki.moe>"]
+version = "0.4.1"
+authors = ["Sokhibjon Orzikulov <sakhib@orzklv.uz>"]
 edition = "2021"
-homepage = "https://osmon.dev"
-documentation = "https://wiki.osmon.dev"
+homepage = "https://osmon-lang.uz"
+documentation = "https://wiki.osmon-lang.uz"
 repository = "https://github.com/osmon-lang/gccjit"
 description = "GCCJIT exposed API for Osmon programming language"
 keywords = ["programming-language", "interpreter", "compiler","uzbek"]
@@ -14,5 +14,5 @@ license = "GPL-3.0"
 exclude = ["target", ".github"]
 
 [dependencies]
-osmojit-sys = "0.4.0"
-osmojit-derive = "0.4.0"
+osmojit-sys = "0.4.1"
+osmojit-derive = "0.4.1"

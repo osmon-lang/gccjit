@@ -1,8 +1,6 @@
-use crate::ctx::Context;
 use osmojit_sys;
 use std::ffi::CStr;
 use std::fmt;
-use std::marker::PhantomData;
 use std::str;
 
 /// Object represents the root of all objects in gccjit. It is not useful
@@ -35,10 +33,14 @@ impl ToObject for Object {
     }
 }
 
+/// # Safety
+/// This function is unsafe because it does not check that the pointer
 pub unsafe fn from_ptr(ptr: *mut osmojit_sys::gcc_jit_object) -> Object {
-    Object { ptr: ptr }
+    Object { ptr }
 }
 
+/// # Safety
+/// This function is unsafe because it does not check that the pointer
 pub unsafe fn get_ptr(object: &Object) -> *mut osmojit_sys::gcc_jit_object {
     object.ptr
 }

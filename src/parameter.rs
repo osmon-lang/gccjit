@@ -1,4 +1,3 @@
-use crate::ctx::Context;
 use crate::lvalue;
 use crate::lvalue::{LValue, ToLValue};
 use crate::object;
@@ -7,7 +6,6 @@ use crate::rvalue;
 use crate::rvalue::{RValue, ToRValue};
 use osmojit_sys;
 use std::fmt;
-use std::marker::PhantomData;
 
 /// Parameter represents a parameter to a function. A series of parameteres
 /// can be combined to form a function signature.
@@ -47,10 +45,14 @@ impl ToLValue for Parameter {
     }
 }
 
+/// # Safety
+/// This function is unsafe because it is possible to create an invalid
 pub unsafe fn from_ptr(ptr: *mut osmojit_sys::gcc_jit_param) -> Parameter {
-    Parameter { ptr: ptr }
+    Parameter { ptr }
 }
 
+/// # Safety
+/// This function is unsafe because it is possible to create an invalid
 pub unsafe fn get_ptr(loc: &Parameter) -> *mut osmojit_sys::gcc_jit_param {
     loc.ptr
 }

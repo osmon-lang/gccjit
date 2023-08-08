@@ -1,9 +1,7 @@
-use crate::ctx::Context;
 use crate::object;
-use osmojit_sys;
 use object::{Object, ToObject};
+use osmojit_sys;
 use std::fmt;
-use std::marker::PhantomData;
 
 /// A Location represents a location used when debugging jitted code.
 #[derive(Copy, Clone)]
@@ -24,10 +22,14 @@ impl fmt::Debug for Location {
     }
 }
 
+/// # Safety
+/// This function is unsafe because it dereferences a raw pointer.
 pub unsafe fn from_ptr(ptr: *mut osmojit_sys::gcc_jit_location) -> Location {
-    Location { ptr: ptr }
+    Location { ptr }
 }
 
+/// # Safety
+/// This function is unsafe because it dereferences a raw pointer.
 pub unsafe fn get_ptr(loc: &Location) -> *mut osmojit_sys::gcc_jit_location {
     loc.ptr
 }

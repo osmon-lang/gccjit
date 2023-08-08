@@ -1,7 +1,5 @@
 use std::fmt;
-use std::marker::PhantomData;
 
-use crate::ctx::Context;
 use crate::object;
 use crate::object::{Object, ToObject};
 
@@ -25,10 +23,14 @@ impl fmt::Debug for Field {
     }
 }
 
+/// # Safety
+/// This function is unsafe because it dereferences a raw pointer.
 pub unsafe fn from_ptr(ptr: *mut osmojit_sys::gcc_jit_field) -> Field {
-    Field { ptr: ptr }
+    Field { ptr }
 }
 
+/// # Safety
+/// This function is unsafe because it dereferences a raw pointer.
 pub unsafe fn get_ptr(f: &Field) -> *mut osmojit_sys::gcc_jit_field {
     f.ptr
 }

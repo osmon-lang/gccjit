@@ -1,6 +1,5 @@
 use crate::block;
 use crate::block::Block;
-use crate::ctx::Context;
 use crate::location;
 use crate::location::Location;
 use crate::lvalue;
@@ -14,7 +13,6 @@ use crate::ty::Type;
 use osmojit_sys;
 use std::ffi::CString;
 use std::fmt;
-use std::marker::PhantomData;
 use std::ptr;
 
 /// FunctionType informs gccjit what sort of function a new function will be.
@@ -114,10 +112,14 @@ impl Function {
     }
 }
 
+/// # Safety
+/// This function is unsafe because it dereferences a raw pointer.
 pub unsafe fn from_ptr(ptr: *mut osmojit_sys::gcc_jit_function) -> Function {
-    Function { ptr: ptr }
+    Function { ptr }
 }
 
+/// # Safety
+/// This function is unsafe because it dereferences a raw pointer.
 pub unsafe fn get_ptr(loc: &Function) -> *mut osmojit_sys::gcc_jit_function {
     loc.ptr
 }
