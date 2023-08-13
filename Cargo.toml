@@ -1,6 +1,6 @@
 [package]
 name = "osmojit"
-version = "0.4.1"
+version = "0.4.2"
 authors = ["Sokhibjon Orzikulov <sakhib@orzklv.uz>"]
 edition = "2021"
 homepage = "https://osmon-lang.uz"
