@@ -1,5 +1,5 @@
 use std::default::Default;
-use std::ffi::CString;
+use std::ffi::{c_long, CString};
 use std::mem;
 use std::ops::Drop;
 use std::ptr;
@@ -631,7 +631,7 @@ impl Context {
             let ptr = osmojit_sys::gcc_jit_context_new_rvalue_from_long(
                 self.ptr,
                 types::get_ptr(&ty),
-                value,
+                value as c_long,
             );
             rvalue::from_ptr(ptr)
         }
