@@ -1,6 +1,5 @@
-use gccjit_rs::*;
+use osmojit::*;
 
-use block::*;
 use ctx::*;
 use function::*;
 use std::intrinsics::transmute;

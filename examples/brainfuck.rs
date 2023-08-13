@@ -1,4 +1,4 @@
-extern crate gccjit_rs as gccjit;
+extern crate osmojit as gccjit;
 use gccjit::rvalue::ToRValue;
 use std::io;
 use std::mem;
@@ -19,7 +19,7 @@ pub enum Op {
 }
 
 fn main() {
-    let context: gccjit_rs::ctx::Context = gccjit::ctx::Context::default();
+    let context: osmojit::ctx::Context = gccjit::ctx::Context::default();
     context.set_opt_level(gccjit::ctx::OptimizationLevel::Standard);
     context.set_dump_code(true);
     /*let stdin = std::io::stdin();
@@ -66,7 +66,7 @@ fn read_ops<R: io::Read>(mut reader: R) -> Result<Vec<Op>, io::Error> {
     Ok(ops)
 }
 
-fn codegen<'a, 'ctx>(ops: &[Op], context: &'a gccjit::ctx::Context) -> bool {
+fn codegen(ops: &[Op], context: &gccjit::ctx::Context) -> bool {
     // first we set up the function so that it has signature () -> void.
     let void_ty = context.new_type::<()>();
     let char_ty = context.new_type::<u8>();
@@ -239,7 +239,7 @@ fn codegen<'a, 'ctx>(ops: &[Op], context: &'a gccjit::ctx::Context) -> bool {
         }
     }
     // this program is only valid if the block stack is zero.
-    if block_stack.len() != 0 {
+    if !block_stack.is_empty() {
         return false;
     }
     // finish off the last block with a ret.
